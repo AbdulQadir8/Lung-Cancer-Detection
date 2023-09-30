@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt
 def preprocess_image(image):
     image = tf.image.decode_image(image.read(), channels=3)
     image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, (224, 224))
+    image = tf.image.resize(image, (200, 200))
     return image
 
 # Load the pre-trained model
-model = tf.keras.models.load_model('lungcaner_detection2.h5')
+model = tf.keras.models.load_model('lung_cancer_simple.h5')
 
 # Streamlit UI
 st.title("Lung Cancer Detection")
@@ -32,17 +32,20 @@ if uploaded_image:
         st.write("Detecting lung cancer...")
 
         # Make predictions using the model
-        image = tf.image.resize(image, (224, 224))
+        image = tf.image.resize(image, (200,200))
         image = tf.expand_dims(image, axis=0)
         predictions = model.predict(image)
 
-         # Get the top predicted class and confidence
-        class_id = np.argmax(predictions.round())
-        confidence = predictions[class_id]
+        
 
-        st.write(f"Predicted Class ID: {class_id}")
+        # Assuming you're doing binary classification, you can round the prediction
+        rounded_predictions = np.round(predictions)
+
+
+        class_id = rounded_predictions[0][0]
+        confidence = predictions[0][0]
+
+        class_labels = ["Negative", "Positive"]  
+
+        st.write(f"Predicted Class ID: {class_labels[int(class_id)]}")
         st.write(f"Confidence: {confidence:.4f}")
-
-# # Optional: Display a sample image for testing
-# sample_image = Image.open("sample_lung_image.jpg")
-# st.image(sample_image, caption="Sample Lung Image", use_column_width=True)

@@ -4,7 +4,7 @@ import numpy as np
 def preprocess_image(image):
     image = tf.image.decode_image(image.read(), channels=3)
     image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, (224, 224))
+    image = tf.image.resize(image, (200,200))
     image = image.numpy()
     return image
 
